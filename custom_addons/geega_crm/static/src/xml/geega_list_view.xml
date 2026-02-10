@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="geega_crm.GeegaListView" t-inherit="web.ListView" t-inherit-mode="primary">
+        <xpath expr="//Layout" position="before">
+            <!-- Left Sidebar -->
+            <div t-attf-class="geega_sidebar {{ geegaState.sidebarOpen ? 'open' : 'collapsed' }}">
+                <div class="geega_sidebar_header" t-on-click="toggleSidebar">
+                    <span class="geega_sidebar_title">Lead Center</span>
+                    <i t-attf-class="fa {{ geegaState.sidebarOpen ? 'fa-chevron-up' : 'fa-chevron-down' }} geega_sidebar_toggle"/>
+                </div>
+                <ul t-if="geegaState.sidebarOpen" class="geega_sidebar_menu">
+                    <t t-foreach="sidebarMenus" t-as="menu" t-key="menu.id">
+                        <li t-attf-class="geega_sidebar_item {{ menu.id === 'original_leads' ? 'active' : '' }}"
+                            t-on-click="() => this.onSidebarMenuClick(menu.xmlid)">
+                            <span t-esc="menu.name"/>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+
+            <!-- Main Content Wrapper (Stage tabs, search, export sit above Layout) -->
+            <div class="geega_content_header">
+                <!-- Stage Tabs -->
+                <div class="geega_stage_tabs">
+                    <a t-attf-class="geega_tab {{ !geegaState.activeStageId ? 'active' : '' }}"
+                       t-on-click="onStageAllClick" href="#">All</a>
+                    <t t-foreach="geegaState.stages" t-as="stage" t-key="stage.id">
+                        <a t-attf-class="geega_tab {{ geegaState.activeStageId === stage.id ? 'active' : '' }}"
+                           t-on-click="() => this.onStageClick(stage.id)" href="#"
+                           t-esc="stage.name"/>
+                    </t>
+                    <span class="geega_tab_overflow">...</span>
+                </div>
+                <!-- Custom Search Bar -->
+                <div class="geega_search_bar">
+                    <div class="geega_search_fields">
+                        <div class="geega_search_field">
+                            <label>Lead Name</label>
+                            <input type="text" placeholder="Enter lead or project name"
+                                   t-att-value="geegaState.searchLeadName"
+                                   t-on-input="(ev) => this.onSearchInputChange('searchLeadName', ev)"
+                                   t-on-keydown="onSearchKeydown"/>
+                        </div>
+                        <div class="geega_search_field">
+                            <label>Customer Name</label>
+                            <input type="text" placeholder="Enter customer name"
+                                   t-att-value="geegaState.searchCustomerName"
+                                   t-on-input="(ev) => this.onSearchInputChange('searchCustomerName', ev)"
+                                   t-on-keydown="onSearchKeydown"/>
+                        </div>
+                        <div class="geega_search_field">
+                            <label>Phone</label>
+                            <input type="text" placeholder="Enter phone number"
+                                   t-att-value="geegaState.searchPhone"
+                                   t-on-input="(ev) => this.onSearchInputChange('searchPhone', ev)"
+                                   t-on-keydown="onSearchKeydown"/>
+                        </div>
+                    </div>
+                    <div class="geega_search_actions">
+                        <button class="btn geega_btn_search" t-on-click="onSearchClick">Search</button>
+                        <button class="btn geega_btn_reset" t-on-click="onResetClick">Reset</button>
+                        <div class="geega_unfold_dropdown">
+                            <button class="btn geega_btn_unfold">Unfold <i class="fa fa-caret-down"/></button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Export Button -->
+                <div class="geega_export_bar">
+                    <a href="#" class="geega_export_btn" t-on-click.prevent="onExportClick">
+                        <i class="fa fa-download"/> Export Leads
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+    <t t-name="geega_crm.GeegaListView.Buttons"/>
+
+</templates>

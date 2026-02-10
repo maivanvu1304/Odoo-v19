@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- CRM Stages for Geega CRM -->
+        <record id="stage_lead_new" model="crm.stage">
+            <field name="name">New</field>
+            <field name="sequence">1</field>
+            <field name="fold" eval="False"/>
+        </record>
+
+        <record id="stage_lead_first_contact" model="crm.stage">
+            <field name="name">First Contact Established</field>
+            <field name="sequence">2</field>
+            <field name="fold" eval="False"/>
+        </record>
+
+        <record id="stage_lead_qualified" model="crm.stage">
+            <field name="name">Qualified Lead</field>
+            <field name="sequence">3</field>
+            <field name="fold" eval="False"/>
+        </record>
+
+        <record id="stage_lead_quotation_prep" model="crm.stage">
+            <field name="name">Quotation Preparation</field>
+            <field name="sequence">4</field>
+            <field name="fold" eval="False"/>
+        </record>
+
+        <record id="stage_lead_tender_submission" model="crm.stage">
+            <field name="name">Tender Submission</field>
+            <field name="sequence">5</field>
+            <field name="fold" eval="False"/>
+        </record>
+
+        <record id="stage_lead_tender_evaluation" model="crm.stage">
+            <field name="name">Tender Evaluation</field>
+            <field name="sequence">6</field>
+            <field name="fold" eval="False"/>
+        </record>
+
+        <record id="stage_lead_converted" model="crm.stage">
+            <field name="name">Converted to Customer</field>
+            <field name="sequence">7</field>
+            <field name="fold" eval="False"/>
+        </record>
+
+        <record id="stage_lead_no_intention" model="crm.stage">
+            <field name="name">No Intention</field>
+            <field name="sequence">8</field>
+            <field name="fold" eval="True"/>
+        </record>
+
+        <record id="stage_lead_invalid" model="crm.stage">
+            <field name="name">Invalid Lead</field>
+            <field name="sequence">9</field>
+            <field name="fold" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

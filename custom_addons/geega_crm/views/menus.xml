@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Root Menu: Geega CRM -->
+        <menuitem 
+            id="menu_geega_crm_root"
+            name="Geega CRM"
+            sequence="5"
+            web_icon="geega_crm,static/description/icon.png"/>
+
+        <!-- Lead Management Section -->
+        
+        <menuitem 
+            id="menu_geega_lead_mgmt"
+            name="Lead Mgmt"
+            parent="menu_geega_crm_root"
+            action="action_geega_crm_original_leads"
+            sequence="10"/>
+
+        <menuitem 
+            id="menu_geega_sales_mgmt"
+            name="Sales Mgmt"
+            parent="menu_geega_crm_root"
+            action="action_geega_sales_dashboard"
+            sequence="20"/>
+
+        <menuitem 
+            id="menu_geega_marketing_mgmt"
+            name="Marketing Mgmt"
+            parent="menu_geega_crm_root"
+            action="action_geega_crm_original_leads"
+            sequence="30"/> 
+
+        <!-- Leasing & Rental Section -->
+        <menuitem 
+            id="menu_geega_leasing_rental"
+            name="Leasing &amp; Rental"
+            parent="menu_geega_crm_root"
+            action="action_geega_crm_original_leads"
+            sequence="40"/>
+
+        <!-- Autosync & Accessories Section -->
+        <menuitem 
+            id="menu_geega_autosync_accessories"
+            name="Autospa &amp; Accessories"
+            parent="menu_geega_crm_root"
+            action="action_geega_crm_original_leads"
+            sequence="50"/>
+
+        <!-- After-Sales Lead Section -->
+        <menuitem 
+            id="menu_geega_after_sales"
+            name="After-Sales Lead"
+            parent="menu_geega_crm_root"
+            action="action_geega_crm_original_leads"
+            sequence="60"/>
+
+        <!-- Enterprise Management Section -->
+        <menuitem 
+            id="menu_geega_enterprise_mgmt"
+            name="Enterprise Mgmt"
+            parent="menu_geega_crm_root"
+            action="action_geega_crm_original_leads"
+            sequence="70"/>
+
+    </data>
+</odoo>
