@@ -47,6 +47,8 @@ Complete CRM solution with:
             'geega_crm/static/src/xml/pages/coming_soon_page.xml',
             'geega_crm/static/src/js/pages/tender_page.js',
             'geega_crm/static/src/xml/pages/tender_page.xml',
+            'geega_crm/static/src/js/pages/tender_form.js',
+            'geega_crm/static/src/xml/pages/tender_form.xml',
             'geega_crm/static/src/js/geega_sales_dashboard.js',
             'geega_crm/static/src/xml/geega_sales_dashboard.xml',
         ],

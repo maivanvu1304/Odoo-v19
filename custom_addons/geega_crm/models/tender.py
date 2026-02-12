@@ -67,8 +67,9 @@ class GeegaTender(models.Model):
     
     remarks = fields.Text(string='Remarks')
 
-    @api.model
-    def create(self, vals):
-        if vals.get('tender_no', 'New') == 'New':
-            vals['tender_no'] = self.env['ir.sequence'].next_by_code('geega.tender') or 'New'
-        return super(GeegaTender, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('tender_no', 'New') == 'New':
+                vals['tender_no'] = self.env['ir.sequence'].next_by_code('geega.tender') or 'New'
+        return super(GeegaTender, self).create(vals_list)

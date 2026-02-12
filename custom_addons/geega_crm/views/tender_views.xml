@@ -78,12 +78,6 @@
             <field name="view_mode">list,form</field>
         </record>
 
-        <!-- Menu -->
-        <menuitem id="menu_geega_tender"
-                  name="Tenders"
-                  parent="geega_crm.menu_geega_crm_root"
-                  action="action_geega_tender"
-                  sequence="20"/>
 
     </data>
 </odoo>

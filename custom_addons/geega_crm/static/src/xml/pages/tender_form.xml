@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="geega_crm.TenderForm">
+        <Dialog title="'New Tender'" size="'xl'">
+            <div class="geega_tender_form_container">
+                <div class="row">
+                    <!-- Column 1 -->
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-bold small text-danger">* Tender Title</label>
+                            <input type="text" class="form-control" placeholder="Enter tender title" t-model="state.title"/>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-bold small text-danger">* Lead No.</label>
+                            <select class="form-select" t-model="state.lead_id">
+                                <option value="">Select associated lead</option>
+                                <t t-foreach="leads" t-as="lead" t-key="lead.id">
+                                    <option t-att-value="lead.id" t-esc="lead.name"/>
+                                </t>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-bold small text-danger">* Vehicle Type</label>
+                            <select class="form-select" t-model="state.vehicle_type">
+                                <option value="">Select vehicle type</option>
+                                <option value="passenger">Passenger</option>
+                                <option value="truck">Truck</option>
+                                <option value="lorry">Lorry</option>
+                                <option value="bus">Bus</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-bold small text-danger">* Negotiation Status</label>
+                            <select class="form-select" t-model="state.negotiation_status">
+                                <option value="">Select negotiation status</option>
+                                <option value="success">Success</option>
+                                <option value="failed">Failed</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-bold small text-danger">* Tender Status</label>
+                            <select class="form-select" t-model="state.tender_status">
+                                <option value="">Select tender status</option>
+                                <option value="success">Success</option>
+                                <option value="failed">Failed</option>
+                                <option value="in_progress">In Progress</option>
+                            </select>
+                        </div>
+                         <div class="form-group mb-3">
+                            <label class="form-label fw-bold small">Submission Date</label>
+                            <input type="date" class="form-control" t-model="state.submission_date"/>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-bold small">Department</label>
+                            <select class="form-select" t-model="state.department">
+                                <option value="">Select department</option>
+                                <option value="fleet_sales">Fleet Sales</option>
+                                <option value="public_transport">Public Transport</option>
+                                <option value="corporate_sales">Corporate Sales</option>
+                                <option value="education_transport">Education Transport</option>
+                                <option value="heavy_equipment">Heavy Equipment</option>
+                                <option value="aviation_sales">Aviation Sales</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Column 2 -->
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-bold small text-danger">* Customer Name</label>
+                            <select class="form-select" t-model="state.partner_id">
+                                <option value="">Select existing customer</option>
+                                <t t-foreach="partners" t-as="partner" t-key="partner.id">
+                                    <option t-att-value="partner.id" t-esc="partner.name"/>
+                                </t>
+                            </select>
+                        </div>
+                         <div class="form-group mb-3">
+                            <label class="form-label fw-bold small text-danger">* Owner</label>
+                            <select class="form-select" t-model="state.user_id">
+                                <option value="">Select tender owner</option>
+                                <t t-foreach="users" t-as="user" t-key="user.id">
+                                    <option t-att-value="user.id" t-esc="user.name"/>
+                                </t>
+                            </select>
+                        </div>
+                         <div class="form-group mb-3">
+                            <label class="form-label fw-bold small text-danger">* Model</label>
+                            <input type="text" class="form-control" placeholder="Enter vehicle model" t-model="state.model"/>
+                        </div>
+                         <div class="form-group mb-3">
+                            <label class="form-label fw-bold small text-danger">* Tender Stage</label>
+                            <select class="form-select" t-model="state.tender_stage">
+                                <option value="">Enter tender stage</option>
+                                <option value="approved">Approved</option>
+                                <option value="lost">Lost</option>
+                                <option value="negotiation">Negotiation</option>
+                                <option value="revision">Revision</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-bold small">POC Required</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="pocCheck" 
+                                       t-att-checked="state.poc_required === 'yes'"
+                                       t-on-change="(ev) => state.poc_required = ev.target.checked ? 'yes' : 'no'"/>
+                                <label class="form-check-label fw-bold" for="pocCheck">
+                                    Yes, POC is required
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="form-label fw-bold small">Approval Status</label>
+                             <select class="form-select" t-model="state.approval_status">
+                                <option value="">Select approval status</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                                <option value="pending">Pending</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12">
+                         <div class="form-group mb-3">
+                            <label class="form-label fw-bold small">Remarks</label>
+                            <textarea class="form-control" rows="3" placeholder="Enter any additional notes or remarks" t-model="state.remarks"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <t t-set-slot="footer">
+                <button class="btn btn-secondary me-2" t-on-click="props.close">Cancel</button>
+                <button class="btn btn-success" t-on-click="save">Save</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

@@ -2,12 +2,15 @@
 
 import { Component, useState, onWillStart } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { TenderForm } from "./tender_form";
 
 export class TenderPage extends Component {
     static template = "geega_crm.TenderPage";
 
     setup() {
         this.orm = useService("orm");
+        this.actionService = useService("action");
+        this.dialog = useService("dialog");
 
         this.state = useState({
             tenders: [],
@@ -180,40 +183,12 @@ export class TenderPage extends Component {
 
     // --- Actions ---
     onNewTender() {
-        // Simple action to open form view
-        this.actionService.doAction({
-            type: 'ir.actions.act_window',
-            res_model: 'geega.tender',
-            view_mode: 'form',
-            views: [[false, 'form']],
-            target: 'current',
+        this.dialog.add(TenderForm, {
+            onTenderCreated: () => {
+                this.loadTenders();
+            },
         });
     }
-
-    setup() {
-        this.orm = useService("orm");
-        this.actionService = useService("action"); // Need action service
-        // ... (rest of setup)
-
-        this.state = useState({
-            tenders: [],
-            selectedIds: [],
-            selectAll: false,
-            filterType: "all",
-            searchKeyword: "",
-            // Pagination
-            currentPage: 1,
-            itemsPerPage: 10,
-            totalItems: 0,
-        });
-
-        onWillStart(async () => {
-            await this.loadTenders();
-        });
-    }
-
-    // ... (rest of methods: onUpdateStage, etc. remain similar for now)
-
     // --- Actions ---
     async onUpdateStage() {
         // Example implementation using ORM write
