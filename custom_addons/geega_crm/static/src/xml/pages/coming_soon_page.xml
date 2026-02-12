@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="geega_crm.ComingSoonPage">
+        <div class="geega_sales_page_content">
+            <h2 class="geega_sales_page_title" t-esc="pageTitle"/>
+            <p class="geega_sales_page_subtitle">Coming soon</p>
+        </div>
+    </t>
+
+</templates>

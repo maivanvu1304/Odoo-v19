@@ -2,10 +2,14 @@
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { Component, useState, onWillStart } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
+import { WorkbenchPage } from "./pages/workbench_page";
+import { ComingSoonPage } from "./pages/coming_soon_page";
+import { TenderPage } from "./pages/tender_page";
 
 export class GeegaSalesDashboard extends Component {
     static template = "geega_crm.SalesDashboard";
+    static components = { WorkbenchPage, ComingSoonPage, TenderPage };
 
     setup() {
         this.orm = useService("orm");
@@ -15,31 +19,21 @@ export class GeegaSalesDashboard extends Component {
             // Sidebar sections open/close
             sections: {
                 business_center: true,
-                test_drive_center: true,
-                booking_center: true,
+                test_drive_center: false,
+                booking_center: false,
                 customer_center: false,
                 report_center: false,
             },
             // Currently active menu item
             activeMenu: "workbench",
-            // Dashboard KPI data
-            kpi: {
-                totalContractValue: "0",
-                totalActiveLeads: 0,
-                totalActiveTenders: 0,
-                winRate: "0",
-                paymentCompletionRate: "0",
-            },
-            // Summary cards
-            summary: {
-                totalLeads: 0,
-                totalLeadsChange: 0,
-                activeCustomers: 0,
-                activeCustomersChange: 0,
-                totalRevenue: "0",
-                totalRevenueChange: 0,
-            },
+            // Open tabs (ordered list)
+            openTabs: [
+                { id: "workbench", name: "Workbench" },
+            ],
         });
+
+        // Menu name lookup for tab labels
+        this.menuNames = {};
 
         // Sidebar menu configuration
         this.sidebarConfig = [
@@ -95,71 +89,12 @@ export class GeegaSalesDashboard extends Component {
             },
         ];
 
-        onWillStart(async () => {
-            await this.loadDashboardData();
-        });
-    }
-
-    async loadDashboardData() {
-        try {
-            // Get total leads count
-            const leads = await this.orm.searchCount("crm.lead", []);
-
-            // Get active leads (not in folded stages)
-            const activeLeads = await this.orm.searchCount("crm.lead", [
-                ["stage_id.fold", "=", false],
-            ]);
-
-            // Get leads in tender stages
-            const tenderLeads = await this.orm.searchCount("crm.lead", [
-                ["stage_id.name", "in", ["Tender Submission", "Tender Evaluation"]],
-            ]);
-
-            // Get won leads
-            const wonLeads = await this.orm.searchCount("crm.lead", [
-                ["stage_id.name", "=", "Converted to Customer"],
-            ]);
-
-            // Get unique partners from leads
-            const partners = await this.orm.readGroup(
-                "crm.lead",
-                [["partner_name", "!=", false]],
-                ["partner_name"],
-                ["partner_name"]
-            );
-
-            // Calculate KPIs
-            const winRate = leads > 0 ? ((wonLeads / leads) * 100).toFixed(1) : "0";
-            const totalValue = leads * 1850; // Simulated value per lead
-
-            this.state.kpi = {
-                totalContractValue: this.formatCurrency(totalValue),
-                totalActiveLeads: activeLeads,
-                totalActiveTenders: tenderLeads,
-                winRate: winRate,
-                paymentCompletionRate: "92.1",
-            };
-
-            this.state.summary = {
-                totalLeads: leads,
-                totalLeadsChange: 12,
-                activeCustomers: partners.length,
-                activeCustomersChange: 8,
-                totalRevenue: this.formatCurrency(totalValue * 0.65),
-                totalRevenueChange: 15,
-            };
-        } catch (e) {
-            console.warn("GeegaSalesDashboard: Could not load KPI data", e);
+        // Build menu name lookup
+        for (const section of this.sidebarConfig) {
+            for (const item of section.items) {
+                this.menuNames[item.id] = item.name;
+            }
         }
-    }
-
-    formatCurrency(value) {
-        if (value >= 1000000) {
-            return `USD ${(value / 1000000).toFixed(1)}M`;
-        } else if (value >= 1000) {
-            return `$${(value / 1000).toFixed(0)}K`;
-        }
-        return `$${value}`;
     }
 
     toggleSection(sectionId) {
@@ -167,17 +102,42 @@ export class GeegaSalesDashboard extends Component {
     }
 
     onMenuClick(menuId) {
+        // Set active menu
         this.state.activeMenu = menuId;
-        // For now, all items show the workbench dashboard
-        // Future: navigate to specific views via doAction
+
+        // Add tab if not already open
+        const tabExists = this.state.openTabs.some((t) => t.id === menuId);
+        if (!tabExists) {
+            this.state.openTabs.push({
+                id: menuId,
+                name: this.menuNames[menuId] || menuId,
+            });
+        }
     }
 
-    isSectionOpen(sectionId) {
-        return this.state.sections[sectionId];
+    onTabClick(tabId) {
+        this.state.activeMenu = tabId;
     }
 
-    isMenuActive(menuId) {
-        return this.state.activeMenu === menuId;
+    onTabClose(tabId) {
+        // Don't close if it's the only tab
+        if (this.state.openTabs.length <= 1) return;
+
+        const idx = this.state.openTabs.findIndex((t) => t.id === tabId);
+        this.state.openTabs.splice(idx, 1);
+
+        // If we closed the active tab, switch to the last tab
+        if (this.state.activeMenu === tabId) {
+            const lastTab = this.state.openTabs[this.state.openTabs.length - 1];
+            this.state.activeMenu = lastTab.id;
+        }
+    }
+
+    /**
+     * Get the display name for a given menuId
+     */
+    getMenuName(menuId) {
+        return this.menuNames[menuId] || menuId;
     }
 }
 

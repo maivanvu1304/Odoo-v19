@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="geega_crm.TenderPage">
+        <div class="geega_tender_page">
+
+            <!-- Page Header -->
+            <div class="geega_tender_header">
+                <h2 class="geega_tender_title">Tender Management</h2>
+            </div>
+
+            <!-- Filter / Search Bar -->
+            <div class="geega_tender_filter_bar">
+                <div class="geega_tender_filter_left">
+                    <select class="geega_tender_select" t-on-change="onFilterChange">
+                        <option value="all" t-att-selected="state.filterType === 'all' ? 'selected' : undefined">All Tenders</option>
+                        <option value="approved" t-att-selected="state.filterType === 'approved' ? 'selected' : undefined">Approved</option>
+                        <option value="negotiation" t-att-selected="state.filterType === 'negotiation' ? 'selected' : undefined">Negotiation</option>
+                        <option value="lost" t-att-selected="state.filterType === 'lost' ? 'selected' : undefined">Lost</option>
+                    </select>
+                    <button class="geega_tender_icon_btn" title="Settings">
+                        <i class="fa fa-cog"/>
+                    </button>
+                </div>
+                <div class="geega_tender_filter_right">
+                    <button class="geega_tender_btn_outline" title="Filter">
+                        <i class="fa fa-filter"/> Filter
+                    </button>
+                    <!-- Search Input Added -->
+                    <input type="text" class="geega_tender_search_input" 
+                           placeholder="Search..."
+                           t-model="state.searchKeyword"
+                           t-on-keydown="(ev) => ev.key === 'Enter' and this.onSearch()"/>
+
+                    <button class="geega_tender_btn_primary" t-on-click="onSearch">
+                        <i class="fa fa-search"/> Search
+                    </button>
+                    <button class="geega_tender_btn_outline" t-on-click="onReset">
+                        <i class="fa fa-refresh"/> Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Action Toolbar -->
+            <div class="geega_tender_toolbar">
+                <div class="geega_tender_toolbar_left">
+                    <button class="geega_tender_action_link" t-on-click="onUpdateStage">Update Stage</button>
+                    <button class="geega_tender_action_link" t-on-click="onUpdateResult">Update Result</button>
+                    <button class="geega_tender_action_link" t-on-click="onExportSelected">Export Selected</button>
+                    <button class="geega_tender_action_link delete" t-on-click="onDeleteSelected">Delete</button>
+                </div>
+                <div class="geega_tender_toolbar_right">
+                    <button class="geega_tender_btn_new" t-on-click="onNewTender">
+                        <i class="fa fa-plus"/> New Tender
+                    </button>
+                    <button class="geega_tender_icon_btn" t-on-click="onImport" title="Import">
+                        <i class="fa fa-upload"/> Import
+                    </button>
+                    <button class="geega_tender_icon_btn" t-on-click="onExport" title="Export">
+                        <i class="fa fa-download"/> Export
+                    </button>
+                </div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="geega_tender_table_wrapper">
+                <table class="geega_tender_table">
+                    <thead>
+                        <tr>
+                            <th class="geega_tender_th_check">
+                                <input type="checkbox"
+                                    t-att-checked="state.selectAll"
+                                    t-on-change="toggleSelectAll"/>
+                            </th>
+                            <th>Tender No.</th>
+                            <th>Tender Title</th>
+                            <th>Customer Name</th>
+                            <th>Lead No.</th>
+                            <th>Owner</th>
+                            <th>Vehicle Type</th>
+                            <th>Model</th>
+                            <th>Negotiation Status</th>
+                            <th>Tender Stage</th>
+                            <th>Tender Status</th>
+                            <th>POC Required</th>
+                            <th>Submission Date</th>
+                            <!-- New Columns -->
+                            <th>Approval Status</th>
+                            <th>Department</th>
+                            <th>Updated Time</th>
+                            <th>Created Time</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="state.tenders" t-as="tender" t-key="tender.id">
+                            <tr t-attf-class="#{tender.selected ? 'selected' : ''}">
+                                <td class="geega_tender_td_check">
+                                    <input type="checkbox"
+                                        t-att-checked="tender.selected"
+                                        t-on-change="() => this.toggleSelect(tender.id)"/>
+                                </td>
+                                <td class="geega_tender_td_no">
+                                    <span class="geega_tender_link" t-esc="tender.tenderNo"/>
+                                </td>
+                                <td class="geega_tender_td_title">
+                                    <span class="geega_tender_link" t-esc="tender.tenderTitle"/>
+                                </td>
+                                <td t-esc="tender.customerName"/>
+                                <td class="geega_tender_td_no">
+                                    <span class="geega_tender_link" t-esc="tender.leadNo"/>
+                                </td>
+                                <td t-esc="tender.owner"/>
+                                <td>
+                                    <span t-attf-class="geega_tender_badge #{getBadgeClass('vehicleType', tender.vehicleTypeRaw)}"
+                                          t-esc="tender.vehicleType"/>
+                                </td>
+                                <td t-esc="tender.model"/>
+                                <td>
+                                    <span t-attf-class="geega_tender_badge #{getBadgeClass('negotiationStatus', tender.negotiationStatusRaw)}"
+                                          t-esc="tender.negotiationStatus"/>
+                                </td>
+                                <td>
+                                    <span t-attf-class="geega_tender_badge #{getBadgeClass('tenderStage', tender.tenderStageRaw)}"
+                                          t-esc="tender.tenderStage"/>
+                                </td>
+                                <td>
+                                    <span t-attf-class="geega_tender_badge #{getBadgeClass('tenderStatus', tender.tenderStatusRaw)}"
+                                          t-esc="tender.tenderStatus"/>
+                                </td>
+                                <td>
+                                    <span t-attf-class="geega_tender_poc #{tender.pocRequired === 'Yes' ? 'yes' : 'no'}"
+                                          t-esc="tender.pocRequired"/>
+                                </td>
+                                <td t-esc="tender.submissionDate"/>
+                                
+                                <!-- New Columns Render -->
+                                <td>
+                                    <span t-attf-class="geega_tender_badge #{getBadgeClass('approvalStatus', tender.approvalStatusRaw)}"
+                                          t-esc="tender.approvalStatus"/>
+                                </td>
+                                <td t-esc="tender.department"/>
+                                <td t-esc="tender.updatedTime"/>
+                                <td t-esc="tender.createdTime"/>
+                                <td t-esc="tender.remarks" class="geega_tender_td_remarks"/>
+                            </tr>
+                        </t>
+                        <t t-if="state.tenders.length === 0">
+                            <tr>
+                                <td colspan="18" class="geega_tender_empty">No tenders found.</td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="geega_tender_pagination">
+                <div class="geega_tender_pagination_info">
+                    <span t-esc="paginationInfo"/>
+                </div>
+                <div class="geega_tender_pagination_controls">
+                    <select class="geega_tender_page_size" t-on-change="onItemsPerPageChange">
+                        <option value="10" t-att-selected="state.itemsPerPage === 10 ? 'selected' : undefined">10 items/page</option>
+                        <option value="20" t-att-selected="state.itemsPerPage === 20 ? 'selected' : undefined">20 items/page</option>
+                        <option value="50" t-att-selected="state.itemsPerPage === 50 ? 'selected' : undefined">50 items/page</option>
+                    </select>
+                    <input type="number" class="geega_tender_goto_input"
+                           t-att-value="state.currentPage"
+                           t-on-keydown="onGoToPage"
+                           min="1" t-att-max="totalPages"/>
+                    <span>goto</span>
+                    <button class="geega_tender_btn_go" t-on-click="() => this.goToPage(state.currentPage)">GO</button>
+                </div>
+            </div>
+
+        </div>
+    </t>
+
+</templates>

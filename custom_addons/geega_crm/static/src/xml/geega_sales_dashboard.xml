@@ -33,89 +33,23 @@
             <div class="geega_sales_main">
                 <!-- Tab Bar -->
                 <div class="geega_sales_tabbar">
-                    <div class="geega_sales_tab active">
-                        <span>Workbench</span>
-                        <i class="fa fa-times geega_sales_tab_close"/>
-                    </div>
+                    <t t-foreach="state.openTabs" t-as="tab" t-key="tab.id">
+                        <div t-attf-class="geega_sales_tab #{state.activeMenu === tab.id ? 'active' : ''}"
+                             t-on-click="() => this.onTabClick(tab.id)">
+                            <span t-esc="tab.name"/>
+                            <i class="fa fa-times geega_sales_tab_close"
+                               t-on-click.stop="() => this.onTabClose(tab.id)"/>
+                        </div>
+                    </t>
                 </div>
 
-                <!-- Dashboard Content -->
-                <div class="geega_sales_dashboard_content">
-                    <h2 class="geega_sales_dashboard_title">Workspace Dashboard</h2>
-                    <p class="geega_sales_dashboard_subtitle">Welcome to your CRM workspace. Track your key business metrics below.</p>
+                <!-- ====== Page Content (Sub-Components) ====== -->
+                <WorkbenchPage t-if="state.activeMenu === 'workbench'" />
+                <TenderPage t-elif="state.activeMenu === 'tender_approval'" />
+                <ComingSoonPage t-else=""
+                    menuId="state.activeMenu"
+                    menuName="getMenuName(state.activeMenu)" />
 
-                    <!-- KPI Cards Row -->
-                    <div class="geega_sales_kpi_row">
-                        <!-- Total Contract Value -->
-                        <div class="geega_sales_kpi_card">
-                            <div class="geega_sales_kpi_icon green">
-                                <i class="fa fa-dollar"/>
-                            </div>
-                            <div class="geega_sales_kpi_label">Total Contract Value</div>
-                            <div class="geega_sales_kpi_value" t-esc="state.kpi.totalContractValue"/>
-                        </div>
-                        <!-- Total Active Leads -->
-                        <div class="geega_sales_kpi_card">
-                            <div class="geega_sales_kpi_icon blue">
-                                <i class="fa fa-users"/>
-                            </div>
-                            <div class="geega_sales_kpi_label">Total Active Leads</div>
-                            <div class="geega_sales_kpi_value" t-esc="state.kpi.totalActiveLeads"/>
-                        </div>
-                        <!-- Total Active Tenders -->
-                        <div class="geega_sales_kpi_card">
-                            <div class="geega_sales_kpi_icon purple">
-                                <i class="fa fa-file-text"/>
-                            </div>
-                            <div class="geega_sales_kpi_label">Total Active Tenders</div>
-                            <div class="geega_sales_kpi_value" t-esc="state.kpi.totalActiveTenders"/>
-                        </div>
-                        <!-- Win Rate -->
-                        <div class="geega_sales_kpi_card">
-                            <div class="geega_sales_kpi_icon orange">
-                                <i class="fa fa-line-chart"/>
-                            </div>
-                            <div class="geega_sales_kpi_label">Win Rate</div>
-                            <div class="geega_sales_kpi_value"><t t-esc="state.kpi.winRate"/>%</div>
-                        </div>
-                        <!-- Payment Completion Rate -->
-                        <div class="geega_sales_kpi_card">
-                            <div class="geega_sales_kpi_icon teal">
-                                <i class="fa fa-credit-card"/>
-                            </div>
-                            <div class="geega_sales_kpi_label">Payment Completion Rate</div>
-                            <div class="geega_sales_kpi_value"><t t-esc="state.kpi.paymentCompletionRate"/>%</div>
-                        </div>
-                    </div>
-
-                    <!-- Summary Cards Row -->
-                    <div class="geega_sales_summary_row">
-                        <!-- Total Leads -->
-                        <div class="geega_sales_summary_card green">
-                            <div class="geega_sales_summary_label">Total Leads</div>
-                            <div class="geega_sales_summary_value" t-esc="state.summary.totalLeads"/>
-                            <div class="geega_sales_summary_change">
-                                +<t t-esc="state.summary.totalLeadsChange"/>% from last month
-                            </div>
-                        </div>
-                        <!-- Active Customers -->
-                        <div class="geega_sales_summary_card blue">
-                            <div class="geega_sales_summary_label">Active Customers</div>
-                            <div class="geega_sales_summary_value" t-esc="state.summary.activeCustomers"/>
-                            <div class="geega_sales_summary_change">
-                                +<t t-esc="state.summary.activeCustomersChange"/>% from last month
-                            </div>
-                        </div>
-                        <!-- Total Revenue -->
-                        <div class="geega_sales_summary_card purple">
-                            <div class="geega_sales_summary_label">Total Revenue</div>
-                            <div class="geega_sales_summary_value" t-esc="state.summary.totalRevenue"/>
-                            <div class="geega_sales_summary_change">
-                                +<t t-esc="state.summary.totalRevenueChange"/>% from last month
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </t>

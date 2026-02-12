@@ -46,3 +46,5 @@ class CrmLeadExtended(models.Model):
         string='Next Contact Date',
         tracking=True
     )
+    
+    tender_ids = fields.One2many('geega.tender', 'lead_id', string='Tenders')
