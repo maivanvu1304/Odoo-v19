@@ -94,8 +94,8 @@
                     </thead>
                     <tbody>
                         <t t-foreach="state.tenders" t-as="tender" t-key="tender.id">
-                            <tr t-attf-class="#{tender.selected ? 'selected' : ''}">
-                                <td class="geega_tender_td_check">
+                            <tr t-attf-class="#{tender.selected ? 'selected' : ''}" t-on-click="() => this.onRowClick(tender)">
+                                <td class="geega_tender_td_check" t-on-click.stop="">
                                     <input type="checkbox"
                                         t-att-checked="tender.selected"
                                         t-on-change="() => this.toggleSelect(tender.id)"/>
@@ -173,6 +173,11 @@
                     <button class="geega_tender_btn_go" t-on-click="() => this.goToPage(state.currentPage)">GO</button>
                 </div>
             </div>
+
+            <!-- Drawer -->
+            <t t-if="state.selectedTenderId">
+                <TenderDrawer tenderId="state.selectedTenderId" onClose="() => this.onDrawerClose()"/>
+            </t>
 
         </div>
     </t>

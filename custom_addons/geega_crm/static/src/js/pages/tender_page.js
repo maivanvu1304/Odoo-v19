@@ -3,9 +3,11 @@
 import { Component, useState, onWillStart } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { TenderForm } from "./tender_form";
+import { TenderDrawer } from "./tender_drawer";
 
 export class TenderPage extends Component {
     static template = "geega_crm.TenderPage";
+    static components = { TenderDrawer };
 
     setup() {
         this.orm = useService("orm");
@@ -22,6 +24,7 @@ export class TenderPage extends Component {
             currentPage: 1,
             itemsPerPage: 10,
             totalItems: 0,
+            selectedTenderId: null,
         });
 
         onWillStart(async () => {
@@ -189,6 +192,16 @@ export class TenderPage extends Component {
             },
         });
     }
+
+    // --- Drawer Actions ---
+    onRowClick(tender) {
+        this.state.selectedTenderId = tender.id;
+    }
+
+    onDrawerClose() {
+        this.state.selectedTenderId = null;
+    }
+
     // --- Actions ---
     async onUpdateStage() {
         // Example implementation using ORM write

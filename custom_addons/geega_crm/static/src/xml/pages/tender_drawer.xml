@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="geega_crm.TenderDrawer">
+        <div class="geega_drawer_backdrop" t-on-click="onClose"></div>
+        <div class="geega_drawer">
+            <!-- Header -->
+            <div class="geega_drawer_header">
+                <h3 class="geega_drawer_title">Details</h3>
+                <button class="geega_drawer_close_btn" t-on-click="onClose">
+                    <i class="fa fa-times"/>
+                </button>
+            </div>
+            
+            <t t-if="state.loading">
+                <div class="geega_drawer_loading">
+                    <i class="fa fa-spinner fa-spin"/> Loading...
+                </div>
+            </t>
+            <t t-else="">
+                <!-- Content Header with Actions -->
+                <div class="geega_drawer_content_header">
+                    <div class="geega_drawer_info_summary">
+                        <h2 class="geega_drawer_tender_title" t-esc="state.tender.name"/>
+                        <div class="geega_drawer_info_grid">
+                            <div class="geega_drawer_info_item">
+                                <label>Tender Title:</label>
+                                <span t-esc="state.tender.name"/>
+                            </div>
+                             <div class="geega_drawer_info_item">
+                                <label>Customer Name:</label>
+                                <span t-esc="state.tender.partner_name"/>
+                            </div>
+                             <div class="geega_drawer_info_item">
+                                <label>Tender Stage:</label>
+                                <span t-esc="state.tender.tender_stage_label"/>
+                            </div>
+                             <div class="geega_drawer_info_item">
+                                <label>Tender Status:</label>
+                                <span t-esc="state.tender.tender_status_label"/>
+                            </div>
+                             <div class="geega_drawer_info_item">
+                                <label>Owner:</label>
+                                <span t-esc="state.tender.user_name"/>
+                            </div>
+                        </div>
+                        
+                        <!-- Progress Bar (Mockup for now) -->
+                        <div class="geega_drawer_progress_bar">
+                             <!-- This would need a real component/logic for stages -->
+                             <div class="geega_progress_step completed">
+                                <div class="step_circle"><i class="fa fa-check"/></div>
+                                <div class="step_label">Negotiation 10%</div>
+                             </div>
+                             <div class="geega_progress_line completed"></div>
+                             <div class="geega_progress_step active">
+                                <div class="step_circle">2</div>
+                                <div class="step_label">Pending Quotation (Bodyb... 25%</div>
+                             </div>
+                             <div class="geega_progress_line"></div>
+                             <div class="geega_progress_step">
+                                <div class="step_circle">3</div>
+                                <div class="step_label">Final Quotation 45%</div>
+                             </div>
+                              <!-- More steps... -->
+                              <div class="geega_progress_line"></div>
+                              <div class="geega_progress_step">
+                                <div class="step_circle">8</div> 
+                                <div class="step_label">End - Success 100%</div>
+                              </div>
+                        </div>
+                    </div>
+                    
+                    <div class="geega_drawer_actions">
+                         <button class="btn btn-outline-secondary" t-on-click="onEdit">
+                            <i class="fa fa-pencil-square-o"/> Edit
+                        </button>
+                        <button class="btn btn-outline-secondary" t-on-click="onUpdateStatus">
+                            <i class="fa fa-sort-amount-asc"/> Update Status
+                        </button>
+                        <button class="btn btn-outline-danger" t-on-click="onDelete">
+                            <i class="fa fa-trash-o"/> Delete
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="geega_drawer_tabs">
+                    <t t-foreach="tabs" t-as="tab" t-key="tab.id">
+                        <div t-attf-class="geega_drawer_tab #{state.activeTab === tab.id ? 'active' : ''}"
+                             t-on-click="() => this.selectTab(tab.id)">
+                            <t t-esc="tab.label"/>
+                        </div>
+                    </t>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="geega_drawer_body">
+                    <t t-if="state.activeTab === 'detail'">
+                        <div class="geega_drawer_section">
+                            <h4 class="geega_drawer_section_title">Basic Information</h4>
+                            <div class="geega_drawer_field_grid">
+                                <div class="geega_field">
+                                    <label>Tender No.:</label>
+                                    <span t-esc="state.tender.tender_no"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>Tender Title:</label>
+                                    <span t-esc="state.tender.name"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>Customer Name:</label>
+                                    <span t-esc="state.tender.partner_name"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>Lead No.:</label>
+                                    <span t-esc="state.tender.lead_name"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>Owner:</label>
+                                    <span t-esc="state.tender.user_name"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>Tender Type:</label>
+                                    <span class="badge badge-dark">Public</span> <!-- Mockup value -->
+                                </div>
+                                <div class="geega_field">
+                                    <label>Tender Stage:</label>
+                                    <span t-esc="state.tender.tender_stage_label"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>Tender Status:</label>
+                                    <span class="badge badge-light" t-esc="state.tender.tender_status_label"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>Created Time:</label>
+                                    <span t-esc="state.tender.create_date"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>Updated Time:</label>
+                                    <span t-esc="state.tender.write_date"/>
+                                </div>
+                                 <div class="geega_field full-width">
+                                    <label>Description:</label>
+                                    <p t-esc="state.tender.remarks"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="geega_drawer_empty_tab">
+                            <p>Content for <b t-esc="tabs.find(t => t.id === state.activeTab).label"/> is not implemented yet.</p>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>
