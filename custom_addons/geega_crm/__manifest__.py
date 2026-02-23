@@ -26,6 +26,7 @@ Complete CRM solution with:
 
     # Data files loaded on installation
     'data': [
+        'security/security_groups.xml',
         'security/ir.model.access.csv',
         'data/crm_stage_data.xml',
         'data/ir_sequence_data.xml',
@@ -33,14 +34,14 @@ Complete CRM solution with:
         'views/crm_lead_views.xml',
         'views/sales_views.xml',
         'views/tender_views.xml',
+        'views/lead_views.xml',
         'views/menus.xml',
     ],
     
     'assets': {
         'web.assets_backend': [
             'geega_crm/static/src/scss/geega_crm.scss',
-            'geega_crm/static/src/js/geega_list_controller.js',
-            'geega_crm/static/src/xml/geega_list_view.xml',
+            'geega_crm/static/src/js/geega_navbar_customizer.js',
             'geega_crm/static/src/js/pages/workbench_page.js',
             'geega_crm/static/src/xml/pages/workbench_page.xml',
             'geega_crm/static/src/js/pages/coming_soon_page.js',
@@ -53,6 +54,10 @@ Complete CRM solution with:
             'geega_crm/static/src/xml/pages/tender_drawer.xml',
             'geega_crm/static/src/js/geega_sales_dashboard.js',
             'geega_crm/static/src/xml/geega_sales_dashboard.xml',
+            'geega_crm/static/src/js/geega_lead_dashboard.js',
+            'geega_crm/static/src/xml/geega_lead_dashboard.xml',
+            'geega_crm/static/src/js/pages/original_leads_page.js',
+            'geega_crm/static/src/xml/pages/original_leads_page.xml',
         ],
     },
     

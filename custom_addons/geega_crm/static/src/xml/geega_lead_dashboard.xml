@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="geega_crm.LeadDashboard">
+        <div class="geega_sales_wrapper">
+            <!-- Left Sidebar -->
+            <div class="geega_sales_sidebar">
+                <t t-foreach="sidebarConfig" t-as="section" t-key="section.id">
+                    <div class="geega_sales_sidebar_section">
+                        <!-- Section Header -->
+                        <div class="geega_sales_sidebar_header"
+                             t-on-click="() => this.toggleSection(section.id)">
+                            <div class="geega_sales_sidebar_header_left">
+                                <i t-attf-class="fa #{section.icon} geega_sales_section_icon"/>
+                                <span class="geega_sales_section_title" t-esc="section.name"/>
+                            </div>
+                            <i t-attf-class="fa #{state.sections[section.id] ? 'fa-chevron-up' : 'fa-chevron-down'} geega_sales_chevron"/>
+                        </div>
+                        <!-- Section Items -->
+                        <ul t-if="state.sections[section.id]" class="geega_sales_sidebar_items">
+                            <t t-foreach="section.items" t-as="item" t-key="item.id">
+                                <li t-attf-class="geega_sales_sidebar_item #{state.activeMenu === item.id ? 'active' : ''}"
+                                    t-on-click="() => this.onMenuClick(item.id)">
+                                    <span t-esc="item.name"/>
+                                </li>
+                            </t>
+                        </ul>
+                    </div>
+                </t>
+            </div>
+
+            <!-- Main Content -->
+            <div class="geega_sales_main">
+                <!-- Tab Bar -->
+                <div class="geega_sales_tabbar">
+                    <t t-foreach="state.openTabs" t-as="tab" t-key="tab.id">
+                        <div t-attf-class="geega_sales_tab #{state.activeMenu === tab.id ? 'active' : ''}"
+                             t-on-click="() => this.onTabClick(tab.id)">
+                            <span t-esc="tab.name"/>
+                            <i class="fa fa-times geega_sales_tab_close"
+                               t-on-click.stop="() => this.onTabClose(tab.id)"/>
+                        </div>
+                    </t>
+                </div>
+
+                <!-- ====== Page Content (Sub-Components) ====== -->
+                <OriginalLeadsPage t-if="state.activeMenu === 'original_leads'" />
+                <ComingSoonPage t-else=""
+                    menuId="state.activeMenu"
+                    menuName="getMenuName(state.activeMenu)" />
+
+            </div>
+        </div>
+    </t>
+
+</templates>

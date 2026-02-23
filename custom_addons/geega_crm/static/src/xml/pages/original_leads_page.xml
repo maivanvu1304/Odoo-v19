@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="geega_crm.OriginalLeadsPage">
+        <div class="geega_leads_page">
+
+            <!-- Stage Tabs -->
+            <div class="geega_stage_tabs">
+                <a t-attf-class="geega_tab #{!state.activeStageId ? 'active' : ''}"
+                   t-on-click="onStageAllClick" href="#">All</a>
+                <t t-foreach="state.stages" t-as="stage" t-key="stage.id">
+                    <a t-attf-class="geega_tab #{state.activeStageId === stage.id ? 'active' : ''}"
+                       t-on-click="() => this.onStageClick(stage.id)" href="#"
+                       t-esc="stage.name"/>
+                </t>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="geega_leads_search_bar">
+                <div class="geega_leads_search_fields">
+                    <div class="geega_leads_search_field">
+                        <label>Lead Name</label>
+                        <input type="text" placeholder="Enter lead or project name"
+                               t-att-value="state.searchLeadName"
+                               t-on-input="(ev) => this.onSearchInputChange('searchLeadName', ev)"
+                               t-on-keydown="onSearchKeydown"/>
+                    </div>
+                    <div class="geega_leads_search_field">
+                        <label>Customer Name</label>
+                        <input type="text" placeholder="Enter customer name"
+                               t-att-value="state.searchCustomerName"
+                               t-on-input="(ev) => this.onSearchInputChange('searchCustomerName', ev)"
+                               t-on-keydown="onSearchKeydown"/>
+                    </div>
+                    <div class="geega_leads_search_field">
+                        <label>Phone</label>
+                        <input type="text" placeholder="Enter phone number"
+                               t-att-value="state.searchPhone"
+                               t-on-input="(ev) => this.onSearchInputChange('searchPhone', ev)"
+                               t-on-keydown="onSearchKeydown"/>
+                    </div>
+                </div>
+                <div class="geega_leads_search_actions">
+                    <button class="geega_leads_btn_search" t-on-click="onSearch">
+                        <i class="fa fa-search"/> Search
+                    </button>
+                    <button class="geega_leads_btn_reset" t-on-click="onReset">
+                        <i class="fa fa-refresh"/> Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Action Toolbar -->
+            <div class="geega_leads_toolbar">
+                <div class="geega_leads_toolbar_left">
+                    <button class="geega_leads_action_link delete" t-on-click="onDeleteSelected">
+                        <i class="fa fa-trash"/> Delete
+                    </button>
+                </div>
+                <div class="geega_leads_toolbar_right">
+                    <button class="geega_leads_icon_btn" t-on-click="onExport" title="Export">
+                        <i class="fa fa-download"/> Export
+                    </button>
+                </div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="geega_leads_table_wrapper">
+                <table class="geega_leads_table">
+                    <thead>
+                        <tr>
+                            <th class="geega_leads_th_check">
+                                <input type="checkbox"
+                                    t-att-checked="state.selectAll"
+                                    t-on-change="toggleSelectAll"/>
+                            </th>
+                            <th>Lead Name</th>
+                            <th>Company Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Source Lead</th>
+                            <th>Intended Car</th>
+                            <th>Intended Level</th>
+                            <th>Follow-up Person</th>
+                            <th>Department</th>
+                            <th>Last Follow-up</th>
+                            <th>Next Contact</th>
+                            <th>Stage</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="state.leads" t-as="lead" t-key="lead.id">
+                            <tr t-attf-class="#{lead.selected ? 'selected' : ''}"
+                                t-on-click="() => this.onRowClick(lead)">
+                                <td class="geega_leads_td_check" t-on-click.stop="">
+                                    <input type="checkbox"
+                                        t-att-checked="lead.selected"
+                                        t-on-change="() => this.toggleSelect(lead.id)"/>
+                                </td>
+                                <td class="geega_leads_td_name">
+                                    <span class="geega_leads_link" t-esc="lead.name"/>
+                                </td>
+                                <td t-esc="lead.partnerName"/>
+                                <td t-esc="lead.phone"/>
+                                <td>
+                                    <span class="geega_leads_email" t-esc="lead.email"/>
+                                </td>
+                                <td>
+                                    <span t-if="lead.sourceLeadRaw"
+                                          t-attf-class="geega_tender_badge #{getBadgeClass('sourceLead', lead.sourceLeadRaw)}"
+                                          t-esc="lead.sourceLead"/>
+                                </td>
+                                <td t-esc="lead.intendedCar"/>
+                                <td>
+                                    <span t-if="lead.intendedLevelRaw"
+                                          t-attf-class="geega_tender_badge #{getBadgeClass('intendedLevel', lead.intendedLevelRaw)}"
+                                          t-esc="lead.intendedLevel"/>
+                                </td>
+                                <td t-esc="lead.followUpPerson"/>
+                                <td t-esc="lead.department"/>
+                                <td t-esc="lead.lastFollowup"/>
+                                <td t-esc="lead.nextContact"/>
+                                <td>
+                                    <span class="geega_tender_badge badge-grey" t-esc="lead.stageName"/>
+                                </td>
+                                <td t-esc="lead.createDate"/>
+                            </tr>
+                        </t>
+                        <t t-if="state.leads.length === 0">
+                            <tr>
+                                <td colspan="14" class="geega_leads_empty">No leads found.</td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="geega_tender_pagination">
+                <div class="geega_tender_pagination_info">
+                    <span t-esc="paginationInfo"/>
+                </div>
+                <div class="geega_tender_pagination_controls">
+                    <select class="geega_tender_page_size" t-on-change="onItemsPerPageChange">
+                        <option value="10" t-att-selected="state.itemsPerPage === 10 ? 'selected' : undefined">10 items/page</option>
+                        <option value="20" t-att-selected="state.itemsPerPage === 20 ? 'selected' : undefined">20 items/page</option>
+                        <option value="50" t-att-selected="state.itemsPerPage === 50 ? 'selected' : undefined">50 items/page</option>
+                    </select>
+                    <input type="number" class="geega_tender_goto_input"
+                           t-att-value="state.currentPage"
+                           t-on-keydown="onGoToPage"
+                           min="1" t-att-max="totalPages"/>
+                    <span>goto</span>
+                    <button class="geega_tender_btn_go" t-on-click="() => this.goToPage(state.currentPage)">GO</button>
+                </div>
+            </div>
+
+        </div>
+    </t>
+
+</templates>

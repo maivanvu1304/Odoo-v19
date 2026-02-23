@@ -238,6 +238,7 @@ export class TenderPage extends Component {
 
     // --- Filter / Search ---
     onFilterChange(ev) {
+        console.log("Filter changed:", ev.target.value);
         this.state.filterType = ev.target.value;
         this.state.currentPage = 1;
         this.loadTenders();

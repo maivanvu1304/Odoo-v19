@@ -15,7 +15,7 @@
             id="menu_geega_lead_mgmt"
             name="Lead Mgmt"
             parent="menu_geega_crm_root"
-            action="action_geega_crm_original_leads"
+            action="action_geega_lead_dashboard"
             sequence="10"/>
 
         <menuitem 

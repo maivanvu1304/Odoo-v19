@@ -41,7 +41,7 @@ $border-color: #E0E0E0;
                 border-radius: 4px;
                 margin: 0 2px;
                 transition: background-color 0.2s ease;
-
+                background: #007a55;
                 &:hover {
                     background-color: rgba(255, 255, 255, 0.15) !important;
                     color: white !important;
@@ -1251,7 +1251,9 @@ $border-color: #E0E0E0;
             background: $geega-primary-dark;
         }
     }
-}// ===========================
+}
+
+// ===========================
 // DRAWER COMPONENT
 // ===========================
 
@@ -1276,12 +1278,17 @@ $border-color: #E0E0E0;
     z-index: 1001;
     display: flex;
     flex-direction: column;
-    box-shadow: -4px 0 24px rgba(0,0,0,0.15);
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
     animation: slideInRight 0.3s ease-out;
 
     @keyframes slideInRight {
-        from { transform: translateX(100%); }
-        to { transform: translateX(0); }
+        from {
+            transform: translateX(100%);
+        }
+
+        to {
+            transform: translateX(0);
+        }
     }
 }
 
@@ -1291,7 +1298,7 @@ $border-color: #E0E0E0;
     justify-content: space-between;
     padding: 16px 24px;
     border-bottom: 1px solid $border-color;
-    
+
     .geega_drawer_title {
         margin: 0;
         font-size: 18px;
@@ -1305,7 +1312,7 @@ $border-color: #E0E0E0;
         font-size: 18px;
         color: #888;
         cursor: pointer;
-        
+
         &:hover {
             color: #333;
         }
@@ -1389,10 +1396,12 @@ $border-color: #E0E0E0;
             line-height: 1.2;
         }
 
-        &.active, &.completed {
+        &.active,
+        &.completed {
             .step_circle {
                 background: $geega-primary;
             }
+
             .step_label {
                 color: $geega-primary;
                 font-weight: 600;
@@ -1484,18 +1493,19 @@ $border-color: #E0E0E0;
                 font-weight: 500;
             }
 
-            span, p {
+            span,
+            p {
                 font-size: 14px;
                 color: $geega-text;
                 min-height: 20px;
             }
-            
+
             p {
                 line-height: 1.5;
             }
         }
     }
-    
+
     .geega_drawer_empty_tab {
         display: flex;
         justify-content: center;
@@ -1514,4 +1524,276 @@ $border-color: #E0E0E0;
     font-size: 16px;
     color: #666;
     gap: 10px;
+}
+
+// ===========================
+// NAVBAR — User Role: hide extra systray icons
+// Only show the user-menu (name button) for non-admin users
+// ===========================
+body.geega_user_role {
+    .o_menu_systray {
+        // display: none !important;
+    }
+
+}
+
+// ===========================
+// ORIGINAL LEADS PAGE
+// ===========================
+
+.geega_leads_page {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #f5f7fa;
+}
+
+// --- Leads Search Bar ---
+.geega_leads_search_bar {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    padding: 12px 24px;
+    background: #fff;
+    border-bottom: 1px solid $border-color;
+    flex-wrap: wrap;
+
+    .geega_leads_search_fields {
+        display: flex;
+        gap: 16px;
+        flex: 1;
+        min-width: 0;
+        flex-wrap: wrap;
+
+        .geega_leads_search_field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 180px;
+            flex: 1;
+
+            label {
+                font-size: 12px;
+                font-weight: 600;
+                color: #555;
+                margin-bottom: 0;
+            }
+
+            input {
+                padding: 6px 10px;
+                border: 1px solid $border-color;
+                border-radius: 4px;
+                font-size: 13px;
+                outline: none;
+                transition: border-color 0.2s;
+
+                &:focus {
+                    border-color: $geega-primary;
+                    box-shadow: 0 0 0 2px rgba(0, 166, 80, 0.1);
+                }
+
+                &::placeholder {
+                    color: #aaa;
+                }
+            }
+        }
+    }
+
+    .geega_leads_search_actions {
+        display: flex;
+        gap: 8px;
+        flex-shrink: 0;
+
+        .geega_leads_btn_search {
+            background-color: $geega-primary;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+
+            &:hover {
+                background-color: $geega-primary-dark;
+                color: white;
+            }
+        }
+
+        .geega_leads_btn_reset {
+            background-color: #f5f5f5;
+            color: #555;
+            border: 1px solid $border-color;
+            padding: 6px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+
+            &:hover {
+                background-color: #eee;
+            }
+        }
+    }
+}
+
+// --- Leads Toolbar ---
+.geega_leads_toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 24px;
+    background: #ffffff;
+    border-bottom: 1px solid $border-color;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .geega_leads_toolbar_left {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .geega_leads_toolbar_right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .geega_leads_action_link {
+        background: none;
+        border: none;
+        padding: 4px 10px;
+        font-size: 13px;
+        color: #555;
+        cursor: pointer;
+        transition: color 0.15s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+
+        &:hover {
+            color: $geega-primary;
+        }
+
+        &.delete {
+            color: #e74c3c;
+
+            &:hover {
+                color: #c0392b;
+            }
+        }
+    }
+
+    .geega_leads_icon_btn {
+        background: #fff;
+        border: 1px solid $border-color;
+        border-radius: 4px;
+        padding: 6px 12px;
+        font-size: 13px;
+        color: #666;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.15s ease;
+
+        &:hover {
+            background: #f5f5f5;
+            color: $geega-primary;
+        }
+    }
+}
+
+// --- Leads Table ---
+.geega_leads_table_wrapper {
+    flex: 1;
+    overflow: auto;
+    background: #ffffff;
+}
+
+.geega_leads_table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+
+    thead {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+
+        tr {
+            background: #f8f9fa;
+        }
+
+        th {
+            padding: 10px 12px;
+            font-weight: 600;
+            color: $geega-text;
+            border-bottom: 2px solid $border-color;
+            white-space: nowrap;
+            text-align: left;
+        }
+    }
+
+    tbody {
+        tr {
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.1s ease;
+            cursor: pointer;
+
+            &:hover {
+                background: #f9fdfb;
+            }
+
+            &.selected {
+                background: rgba(0, 166, 80, 0.04);
+            }
+        }
+
+        td {
+            padding: 10px 12px;
+            vertical-align: middle;
+            color: #555;
+        }
+    }
+
+    .geega_leads_th_check,
+    .geega_leads_td_check {
+        width: 32px;
+        text-align: center;
+    }
+
+    .geega_leads_td_name .geega_leads_link {
+        color: $geega-primary;
+        cursor: pointer;
+        font-weight: 500;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .geega_leads_email {
+        color: #1565C0;
+    }
+
+    .geega_leads_empty {
+        text-align: center;
+        padding: 40px 0 !important;
+        color: #aaa;
+        font-size: 14px;
+    }
+}
+
+// --- Badge orange variant (for leads) ---
+.geega_tender_badge.badge-orange {
+    background: #FFF3E0;
+    color: #E65100;
 }

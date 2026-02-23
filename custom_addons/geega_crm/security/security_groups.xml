@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Module Category (dùng cho Settings UI) -->
+        <record id="module_geega_crm_category" model="ir.module.category">
+            <field name="name">Geega CRM</field>
+            <field name="description">Manage access rights for the Geega CRM module.</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <!-- Privilege (Odoo 19: thay thế category_id trong res.groups) -->
+        <record id="privilege_geega_crm" model="res.groups.privilege">
+            <field name="name">Geega CRM</field>
+            <field name="category_id" ref="module_geega_crm_category"/>
+        </record>
+
+        <!-- User Group: read/write/create, không được xóa -->
+        <record id="group_geega_crm_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="privilege_id" ref="privilege_geega_crm"/>
+            <field name="implied_ids" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+            <field name="comment">Geega CRM users can view and create tenders but cannot delete them.</field>
+        </record>
+
+        <!-- Admin Group: full access, kế thừa User -->
+        <record id="group_geega_crm_admin" model="res.groups">
+            <field name="name">Administrator</field>
+            <field name="privilege_id" ref="privilege_geega_crm"/>
+            <field name="implied_ids" eval="[(4, ref('group_geega_crm_user'))]"/>
+            <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+            <field name="comment">Geega CRM administrators have full access including delete.</field>
+        </record>
+
+        <!-- Tự động gán tất cả internal users vào group_geega_crm_user -->
+        <record id="base.group_user" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('group_geega_crm_user'))]"/>
+        </record>
+    </data>
+</odoo>
