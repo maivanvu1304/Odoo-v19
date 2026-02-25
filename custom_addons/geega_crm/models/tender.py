@@ -73,3 +73,80 @@ class GeegaTender(models.Model):
             if vals.get('tender_no', 'New') == 'New':
                 vals['tender_no'] = self.env['ir.sequence'].next_by_code('geega.tender') or 'New'
         return super(GeegaTender, self).create(vals_list)
+
+    @api.model
+    def get_tender_dashboard_data(self, filter_type='all', search='', page=1, limit=10):
+        """Single-call method for Tender Dashboard.
+        Returns tenders (paginated) + total count, all formatted.
+        """
+        domain = []
+
+        # Filter by tender_stage
+        if filter_type and filter_type != 'all':
+            if filter_type in ('approved', 'lost', 'negotiation', 'revision'):
+                domain.append(('tender_stage', '=', filter_type))
+
+        # Search across name, tender_no, partner
+        if search:
+            domain += [
+                '|', '|',
+                ('name', 'ilike', search),
+                ('tender_no', 'ilike', search),
+                ('partner_id.name', 'ilike', search),
+            ]
+
+        total = self.search_count(domain)
+
+        fields_list = [
+            'tender_no', 'name', 'partner_id', 'lead_id', 'user_id',
+            'vehicle_type', 'model', 'negotiation_status', 'tender_stage',
+            'tender_status', 'poc_required', 'submission_date',
+            'approval_status', 'department', 'create_date', 'write_date', 'remarks',
+        ]
+
+        records = self.search_read(
+            domain,
+            fields_list,
+            limit=limit,
+            offset=(page - 1) * limit,
+            order='create_date desc',
+        )
+
+        # Format selection labels server-side
+        def fmt(val):
+            if not val:
+                return ''
+            return val[0].upper() + val[1:].replace('_', ' ')
+
+        tenders = []
+        for r in records:
+            tenders.append({
+                'id': r['id'],
+                'tenderNo': r.get('tender_no') or '',
+                'tenderTitle': r.get('name') or '',
+                'customerName': r['partner_id'][1] if r.get('partner_id') else '',
+                'leadNo': r['lead_id'][1] if r.get('lead_id') else '',
+                'owner': r['user_id'][1] if r.get('user_id') else '',
+                'vehicleType': fmt(r.get('vehicle_type')),
+                'vehicleTypeRaw': r.get('vehicle_type') or '',
+                'model': r.get('model') or '',
+                'negotiationStatus': fmt(r.get('negotiation_status')),
+                'negotiationStatusRaw': r.get('negotiation_status') or '',
+                'tenderStage': fmt(r.get('tender_stage')),
+                'tenderStageRaw': r.get('tender_stage') or '',
+                'tenderStatus': fmt(r.get('tender_status')),
+                'tenderStatusRaw': r.get('tender_status') or '',
+                'pocRequired': 'Yes' if r.get('poc_required') == 'yes' else 'No',
+                'submissionDate': r.get('submission_date') or '',
+                'approvalStatus': fmt(r.get('approval_status')),
+                'approvalStatusRaw': r.get('approval_status') or '',
+                'department': fmt(r.get('department')),
+                'updatedTime': r.get('write_date'),
+                'createdTime': r.get('create_date'),
+                'remarks': r.get('remarks') or '',
+            })
+
+        return {
+            'tenders': tenders,
+            'total': total,
+        }

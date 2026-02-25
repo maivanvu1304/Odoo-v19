@@ -34,81 +34,21 @@ export class TenderPage extends Component {
 
     async loadTenders() {
         try {
-            // Load from geega.tender
-            const domain = [];
-
-            // Apply filter
-            if (this.state.filterType !== 'all') {
-                if (['approved', 'lost', 'negotiation', 'revision'].includes(this.state.filterType)) {
-                    domain.push(['tender_stage', '=', this.state.filterType]);
-                }
-            }
-
-            // Apply search
-            if (this.state.searchKeyword) {
-                domain.push('|', '|',
-                    ['name', 'ilike', this.state.searchKeyword],
-                    ['tender_no', 'ilike', this.state.searchKeyword],
-                    ['partner_id.name', 'ilike', this.state.searchKeyword]
-                );
-            }
-
-            const tenders = await this.orm.searchRead(
+            const result = await this.orm.call(
                 "geega.tender",
-                domain,
-                [
-                    "tender_no",
-                    "name",
-                    "partner_id",
-                    "lead_id",
-                    "user_id",
-                    "vehicle_type",
-                    "model",
-                    "negotiation_status",
-                    "tender_stage",
-                    "tender_status",
-                    "poc_required",
-                    "submission_date",
-                    "approval_status",
-                    "department",
-                    "create_date",
-                    "write_date",
-                    "remarks"
-                ],
+                "get_tender_dashboard_data",
+                [],
                 {
+                    filter_type: this.state.filterType,
+                    search: this.state.searchKeyword,
+                    page: this.state.currentPage,
                     limit: this.state.itemsPerPage,
-                    offset: (this.state.currentPage - 1) * this.state.itemsPerPage,
-                    order: "create_date desc",
                 }
             );
 
-            const totalCount = await this.orm.searchCount("geega.tender", domain);
-            this.state.totalItems = totalCount;
-
-            this.state.tenders = tenders.map((t) => ({
-                id: t.id,
-                tenderNo: t.tender_no || '',
-                tenderTitle: t.name || '',
-                customerName: t.partner_id ? t.partner_id[1] : '',
-                leadNo: t.lead_id ? t.lead_id[1].split(' ')[0] : '', // Extract ID part if needed or use name
-                owner: t.user_id ? t.user_id[1] : '',
-                vehicleType: this.formatSelection(t.vehicle_type),
-                vehicleTypeRaw: t.vehicle_type,
-                model: t.model || '',
-                negotiationStatus: this.formatSelection(t.negotiation_status),
-                negotiationStatusRaw: t.negotiation_status,
-                tenderStage: this.formatSelection(t.tender_stage),
-                tenderStageRaw: t.tender_stage,
-                tenderStatus: this.formatSelection(t.tender_status),
-                tenderStatusRaw: t.tender_status,
-                pocRequired: t.poc_required === 'yes' ? 'Yes' : 'No',
-                submissionDate: t.submission_date || '',
-                approvalStatus: this.formatSelection(t.approval_status),
-                approvalStatusRaw: t.approval_status,
-                department: this.formatSelection(t.department),
-                updatedTime: t.write_date,
-                createdTime: t.create_date,
-                remarks: t.remarks || '',
+            this.state.totalItems = result.total;
+            this.state.tenders = result.tenders.map((t) => ({
+                ...t,
                 selected: false,
             }));
 
@@ -117,12 +57,6 @@ export class TenderPage extends Component {
             this.state.tenders = [];
             this.state.totalItems = 0;
         }
-    }
-
-    formatSelection(value) {
-        if (!value) return '';
-        // Simple capitalization for demo, ideally use field definition
-        return value.charAt(0).toUpperCase() + value.slice(1).replace(/_/g, ' ');
     }
 
     // --- Selection ---
@@ -215,7 +149,9 @@ export class TenderPage extends Component {
     }
 
     onExportSelected() {
-        console.log("Export Selected:", this.state.selectedIds);
+        if (this.state.selectedIds.length === 0) return;
+        const ids = this.state.selectedIds.join(',');
+        window.open(`/geega_crm/export/tenders?ids=${ids}`, '_blank');
     }
 
     async onDeleteSelected() {
@@ -233,7 +169,11 @@ export class TenderPage extends Component {
     }
 
     onExport() {
-        console.log("Export clicked");
+        const params = new URLSearchParams({
+            filter_type: this.state.filterType,
+            search: this.state.searchKeyword,
+        });
+        window.open(`/geega_crm/export/tenders?${params.toString()}`, '_blank');
     }
 
     // --- Filter / Search ---
@@ -246,6 +186,12 @@ export class TenderPage extends Component {
 
     onSearchInput(ev) {
         this.state.searchKeyword = ev.target.value;
+    }
+
+    onSearchKeydown(ev) {
+        if (ev.key === "Enter") {
+            this.onSearch();
+        }
     }
 
     onSearch() {

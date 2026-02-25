@@ -9,6 +9,7 @@ import { ComingSoonPage } from "./pages/coming_soon_page";
 export class GeegaLeadDashboard extends Component {
     static template = "geega_crm.LeadDashboard";
     static components = { OriginalLeadsPage, ComingSoonPage };
+    static props = ["*"];
 
     setup() {
         this.actionService = useService("action");

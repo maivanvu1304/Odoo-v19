@@ -7,11 +7,11 @@
                     <!-- Column 1 -->
                     <div class="col-md-6">
                         <div class="form-group mb-3">
-                            <label class="form-label fw-bold small text-danger">* Tender Title</label>
+                            <label class="form-label fw-bold small ">* Tender Title</label>
                             <input type="text" class="form-control" placeholder="Enter tender title" t-model="state.title"/>
                         </div>
                         <div class="form-group mb-3">
-                            <label class="form-label fw-bold small text-danger">* Lead No.</label>
+                            <label class="form-label fw-bold small ">* Lead No.</label>
                             <select class="form-select" t-model="state.lead_id">
                                 <option value="">Select associated lead</option>
                                 <t t-foreach="leads" t-as="lead" t-key="lead.id">
@@ -20,7 +20,7 @@
                             </select>
                         </div>
                         <div class="form-group mb-3">
-                            <label class="form-label fw-bold small text-danger">* Vehicle Type</label>
+                            <label class="form-label fw-bold small">* Vehicle Type</label>
                             <select class="form-select" t-model="state.vehicle_type">
                                 <option value="">Select vehicle type</option>
                                 <option value="passenger">Passenger</option>
@@ -30,7 +30,7 @@
                             </select>
                         </div>
                         <div class="form-group mb-3">
-                            <label class="form-label fw-bold small text-danger">* Negotiation Status</label>
+                            <label class="form-label fw-bold small">* Negotiation Status</label>
                             <select class="form-select" t-model="state.negotiation_status">
                                 <option value="">Select negotiation status</option>
                                 <option value="success">Success</option>
@@ -39,7 +39,7 @@
                             </select>
                         </div>
                         <div class="form-group mb-3">
-                            <label class="form-label fw-bold small text-danger">* Tender Status</label>
+                            <label class="form-label fw-bold small">* Tender Status</label>
                             <select class="form-select" t-model="state.tender_status">
                                 <option value="">Select tender status</option>
                                 <option value="success">Success</option>
@@ -68,7 +68,7 @@
                     <!-- Column 2 -->
                     <div class="col-md-6">
                         <div class="form-group mb-3">
-                            <label class="form-label fw-bold small text-danger">* Customer Name</label>
+                            <label class="form-label fw-bold small">* Customer Name</label>
                             <select class="form-select" t-model="state.partner_id">
                                 <option value="">Select existing customer</option>
                                 <t t-foreach="partners" t-as="partner" t-key="partner.id">
@@ -77,7 +77,7 @@
                             </select>
                         </div>
                          <div class="form-group mb-3">
-                            <label class="form-label fw-bold small text-danger">* Owner</label>
+                            <label class="form-label fw-bold small">* Owner</label>
                             <select class="form-select" t-model="state.user_id">
                                 <option value="">Select tender owner</option>
                                 <t t-foreach="users" t-as="user" t-key="user.id">
@@ -86,11 +86,11 @@
                             </select>
                         </div>
                          <div class="form-group mb-3">
-                            <label class="form-label fw-bold small text-danger">* Model</label>
+                            <label class="form-label fw-bold small">* Model</label>
                             <input type="text" class="form-control" placeholder="Enter vehicle model" t-model="state.model"/>
                         </div>
                          <div class="form-group mb-3">
-                            <label class="form-label fw-bold small text-danger">* Tender Stage</label>
+                            <label class="form-label fw-bold small">* Tender Stage</label>
                             <select class="form-select" t-model="state.tender_stage">
                                 <option value="">Enter tender stage</option>
                                 <option value="approved">Approved</option>

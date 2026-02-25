@@ -42,6 +42,7 @@ $border-color: #E0E0E0;
                 margin: 0 2px;
                 transition: background-color 0.2s ease;
                 background: #007a55;
+
                 &:hover {
                     background-color: rgba(255, 255, 255, 0.15) !important;
                     color: white !important;
@@ -1532,9 +1533,79 @@ $border-color: #E0E0E0;
 // ===========================
 body.geega_user_role {
     .o_menu_systray {
-        // display: none !important;
+        /* Reserved for future systray customization */
+        visibility: visible;
     }
 
+}
+
+// Toolbar action buttons — disabled state
+.geega_tender_action_link:disabled,
+.geega_leads_action_link:disabled {
+    opacity: 0.4;
+    color: #aaa;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+// ===========================
+// LEAD DRAWER — Specific Styles
+// ===========================
+.geega_lead_drawer_top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.geega_lead_drawer_actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.geega_lead_action_btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1px solid #d0d0d0;
+    border-radius: 6px;
+    background: #fff;
+    color: #333;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+
+    &:hover {
+        background: #f5f5f5;
+        border-color: #bbb;
+    }
+
+    &.danger {
+        color: #d32f2f;
+        border-color: #e0b0b0;
+
+        &:hover {
+            background: #fbe9e7;
+            border-color: #d32f2f;
+        }
+    }
+
+    i {
+        font-size: 13px;
+    }
+}
+
+.geega_lead_email_link {
+    color: #1565C0;
+}
+
+// Lead Drawer info grid: 3 columns
+.geega_drawer_content_header .geega_drawer_info_grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px 32px;
 }
 
 // ===========================

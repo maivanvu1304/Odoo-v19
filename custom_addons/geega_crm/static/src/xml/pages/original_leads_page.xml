@@ -143,6 +143,7 @@
                 </div>
                 <div class="geega_tender_pagination_controls">
                     <select class="geega_tender_page_size" t-on-change="onItemsPerPageChange">
+                        <option value="5" t-att-selected="state.itemsPerPage === 5 ? 'selected' : undefined">5 items/page</option>
                         <option value="10" t-att-selected="state.itemsPerPage === 10 ? 'selected' : undefined">10 items/page</option>
                         <option value="20" t-att-selected="state.itemsPerPage === 20 ? 'selected' : undefined">20 items/page</option>
                         <option value="50" t-att-selected="state.itemsPerPage === 50 ? 'selected' : undefined">50 items/page</option>
@@ -150,11 +151,18 @@
                     <input type="number" class="geega_tender_goto_input"
                            t-att-value="state.currentPage"
                            t-on-keydown="onGoToPage"
+                           t-on-input="onGotoInputChange"
                            min="1" t-att-max="totalPages"/>
                     <span>goto</span>
-                    <button class="geega_tender_btn_go" t-on-click="() => this.goToPage(state.currentPage)">GO</button>
+                    <button class="geega_tender_btn_go" t-on-click="onGoClick">GO</button>
                 </div>
             </div>
+
+            <!-- Lead Drawer -->
+            <LeadDrawer t-if="state.drawerOpen"
+                leadId="state.selectedLeadId"
+                onClose.bind="onCloseDrawer"
+                onLeadUpdated.bind="onLeadUpdated"/>
 
         </div>
     </t>

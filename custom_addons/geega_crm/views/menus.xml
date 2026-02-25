@@ -29,7 +29,7 @@
             id="menu_geega_marketing_mgmt"
             name="Marketing Mgmt"
             parent="menu_geega_crm_root"
-            action="action_geega_crm_original_leads"
+            action="action_geega_sales_dashboard"
             sequence="30"/> 
 
         <!-- Leasing & Rental Section -->
@@ -37,7 +37,7 @@
             id="menu_geega_leasing_rental"
             name="Leasing &amp; Rental"
             parent="menu_geega_crm_root"
-            action="action_geega_crm_original_leads"
+            action="action_geega_sales_dashboard"
             sequence="40"/>
 
         <!-- Autosync & Accessories Section -->
@@ -45,7 +45,7 @@
             id="menu_geega_autosync_accessories"
             name="Autospa &amp; Accessories"
             parent="menu_geega_crm_root"
-            action="action_geega_crm_original_leads"
+            action="action_geega_sales_dashboard"
             sequence="50"/>
 
         <!-- After-Sales Lead Section -->
@@ -53,7 +53,7 @@
             id="menu_geega_after_sales"
             name="After-Sales Lead"
             parent="menu_geega_crm_root"
-            action="action_geega_crm_original_leads"
+            action="action_geega_sales_dashboard"
             sequence="60"/>
 
         <!-- Enterprise Management Section -->
@@ -61,7 +61,7 @@
             id="menu_geega_enterprise_mgmt"
             name="Enterprise Mgmt"
             parent="menu_geega_crm_root"
-            action="action_geega_crm_original_leads"
+            action="action_geega_sales_dashboard"
             sequence="70"/>
 
     </data>

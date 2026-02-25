@@ -2,9 +2,12 @@
 
 import { Component, useState, onWillStart } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { LeadDrawer } from "./lead_drawer";
 
 export class OriginalLeadsPage extends Component {
     static template = "geega_crm.OriginalLeadsPage";
+    static components = { LeadDrawer };
+    static props = {};
 
     setup() {
         this.orm = useService("orm");
@@ -16,13 +19,16 @@ export class OriginalLeadsPage extends Component {
             activeStageId: null,
             selectedIds: [],
             selectAll: false,
+            // Drawer
+            drawerOpen: false,
+            selectedLeadId: null,
             // Search fields
             searchLeadName: "",
             searchCustomerName: "",
             searchPhone: "",
             // Pagination
             currentPage: 1,
-            itemsPerPage: 10,
+            itemsPerPage: 5,
             totalItems: 0,
         });
 
@@ -213,15 +219,19 @@ export class OriginalLeadsPage extends Component {
         this.loadLeads();
     }
 
-    // ─── Row Click → Open Form ────────────────────────────
+    // ─── Row Click → Open Drawer ──────────────────────────
     onRowClick(lead) {
-        this.actionService.doAction({
-            type: "ir.actions.act_window",
-            res_model: "crm.lead",
-            res_id: lead.id,
-            views: [[false, "form"]],
-            target: "current",
-        });
+        this.state.selectedLeadId = lead.id;
+        this.state.drawerOpen = true;
+    }
+
+    onCloseDrawer() {
+        this.state.drawerOpen = false;
+        this.state.selectedLeadId = null;
+    }
+
+    onLeadUpdated() {
+        this.loadLeads();
     }
 
     // ─── Actions ──────────────────────────────────────────
@@ -237,75 +247,7 @@ export class OriginalLeadsPage extends Component {
 
     // ─── Export CSV (all matching records) ─────────────────
     async onExport() {
-        try {
-            const domain = [["type", "=", "lead"]];
-            if (this.state.activeStageId) {
-                domain.push(["stage_id", "=", this.state.activeStageId]);
-            }
-            if (this.state.searchLeadName) {
-                domain.push(["name", "ilike", this.state.searchLeadName]);
-            }
-            if (this.state.searchCustomerName) {
-                domain.push(["partner_name", "ilike", this.state.searchCustomerName]);
-            }
-            if (this.state.searchPhone) {
-                domain.push(["phone", "ilike", this.state.searchPhone]);
-            }
-
-            const allLeads = await this.orm.searchRead(
-                "crm.lead",
-                domain,
-                [
-                    "name", "partner_name", "phone", "email_from",
-                    "source_lead", "intended_car", "intended_level",
-                    "follow_up_person", "department",
-                    "last_followup_date", "next_contact_date",
-                    "stage_id",
-                ],
-                { order: "create_date desc" }
-            );
-
-            const headers = [
-                "Lead Name", "Company Name", "Phone", "Email",
-                "Source Lead", "Intended Car", "Intended Level",
-                "Follow-up Person", "Department",
-                "Last Follow-up Date", "Next Contact Date", "Stage",
-            ];
-            const fields = [
-                "name", "partner_name", "phone", "email_from",
-                "source_lead", "intended_car", "intended_level",
-                "follow_up_person", "department",
-                "last_followup_date", "next_contact_date", "stage_id",
-            ];
-
-            // BOM for UTF-8 Excel compatibility
-            let csv = "\uFEFF" + headers.join(",") + "\n";
-            for (const rec of allLeads) {
-                const row = fields.map((f) => {
-                    let val = rec[f];
-                    if (val && typeof val === "object" && Array.isArray(val)) {
-                        val = val[1]; // Many2one display name
-                    }
-                    if (val === false || val === undefined || val === null) {
-                        val = "";
-                    }
-                    val = String(val).replace(/"/g, '""');
-                    return `"${val}"`;
-                });
-                csv += row.join(",") + "\n";
-            }
-
-            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.setAttribute("href", url);
-            link.setAttribute("download", "geega_original_leads_export.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        } catch (e) {
-            console.warn("OriginalLeadsPage: Export failed", e);
-        }
+        console.log("Exporting leads");
     }
 
     // ─── Pagination ───────────────────────────────────────
@@ -342,5 +284,14 @@ export class OriginalLeadsPage extends Component {
             const page = parseInt(ev.target.value, 10);
             this.goToPage(page);
         }
+    }
+
+    onGotoInputChange(ev) {
+        this._gotoPageValue = parseInt(ev.target.value, 10);
+    }
+
+    onGoClick() {
+        const page = this._gotoPageValue || this.state.currentPage;
+        this.goToPage(page);
     }
 }

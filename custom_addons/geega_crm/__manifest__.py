@@ -58,6 +58,8 @@ Complete CRM solution with:
             'geega_crm/static/src/xml/geega_lead_dashboard.xml',
             'geega_crm/static/src/js/pages/original_leads_page.js',
             'geega_crm/static/src/xml/pages/original_leads_page.xml',
+            'geega_crm/static/src/js/pages/lead_drawer.js',
+            'geega_crm/static/src/xml/pages/lead_drawer.xml',
         ],
     },
     

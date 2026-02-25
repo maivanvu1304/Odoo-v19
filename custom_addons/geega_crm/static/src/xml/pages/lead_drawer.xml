@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="geega_crm.LeadDrawer">
+        <div class="geega_drawer_backdrop" t-on-click="onClose"></div>
+        <div class="geega_drawer">
+            <!-- Header -->
+            <div class="geega_drawer_header">
+                <h3 class="geega_drawer_title">Details</h3>
+                <button class="geega_drawer_close_btn" t-on-click="onClose">
+                    <i class="fa fa-times"/>
+                </button>
+            </div>
+
+            <t t-if="state.loading">
+                <div class="geega_drawer_loading">
+                    <i class="fa fa-spinner fa-spin"/> Loading...
+                </div>
+            </t>
+            <t t-else="">
+                <!-- Content Header: Summary + Actions -->
+                <div class="geega_drawer_content_header">
+                    <div class="geega_lead_drawer_top">
+                        <h2 class="geega_drawer_tender_title" t-esc="state.lead.partner_name or state.lead.name"/>
+
+                        <!-- Action Buttons -->
+                        <div class="geega_lead_drawer_actions">
+                            <button class="geega_lead_action_btn" t-on-click="onEdit">
+                                <i class="fa fa-pencil-square-o"/> Edit
+                            </button>
+                            <button class="geega_lead_action_btn" t-on-click="onTransfer">
+                                <i class="fa fa-exchange"/> Transfer
+                            </button>
+                            <button class="geega_lead_action_btn" t-on-click="onConvert">
+                                <i class="fa fa-random"/> Convert
+                            </button>
+                            <button class="geega_lead_action_btn danger" t-on-click="onDelete">
+                                <i class="fa fa-trash-o"/> Delete
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Info Summary Grid (3 columns) -->
+                    <div class="geega_drawer_info_grid">
+                        <div class="geega_drawer_info_item">
+                            <label>Contact Person:</label>
+                            <span t-esc="state.lead.contact_name"/>
+                        </div>
+                        <div class="geega_drawer_info_item">
+                            <label>Phone:</label>
+                            <span t-esc="state.lead.phone"/>
+                        </div>
+                        <div class="geega_drawer_info_item">
+                            <label>Email:</label>
+                            <span class="geega_lead_email_link" t-esc="state.lead.email_from"/>
+                        </div>
+                        <div class="geega_drawer_info_item">
+                            <label>Owner (Sales PIC):</label>
+                            <span t-esc="state.lead.user_name"/>
+                        </div>
+                        <div class="geega_drawer_info_item">
+                            <label>Intended Level:</label>
+                            <span t-esc="state.lead.intended_level_label"/>
+                        </div>
+                        <div class="geega_drawer_info_item">
+                            <label>Lead Source:</label>
+                            <span t-esc="state.lead.source_lead_label"/>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar (Dynamic CRM Stages) -->
+                    <div class="geega_drawer_progress_bar">
+                        <t t-foreach="state.stages" t-as="stage" t-key="stage.id">
+                            <div t-attf-class="geega_progress_step #{isStageCompleted(stage_index) ? 'completed' : ''} #{isStageActive(stage_index) ? 'active' : ''}">
+                                <div class="step_circle">
+                                    <t t-if="isStageCompleted(stage_index)"><i class="fa fa-check"/></t>
+                                    <t t-else=""><t t-esc="stage_index + 1"/></t>
+                                </div>
+                                <div class="step_label" t-esc="stage.name"/>
+                            </div>
+                            <t t-if="stage_index &lt; state.stages.length - 1">
+                                <div t-attf-class="geega_progress_line #{isLineCompleted(stage_index) ? 'completed' : ''}"></div>
+                            </t>
+                        </t>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="geega_drawer_tabs">
+                    <t t-foreach="tabs" t-as="tab" t-key="tab.id">
+                        <div t-attf-class="geega_drawer_tab #{state.activeTab === tab.id ? 'active' : ''}"
+                             t-on-click="() => this.selectTab(tab.id)">
+                            <t t-esc="tab.label"/>
+                        </div>
+                    </t>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="geega_drawer_body">
+                    <t t-if="state.activeTab === 'detail'">
+                        <div class="geega_drawer_section">
+                            <h4 class="geega_drawer_section_title">Basic Information</h4>
+                            <div class="geega_drawer_field_grid">
+                                <div class="geega_field">
+                                    <label>Lead Name:</label>
+                                    <span t-esc="state.lead.name"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>Intended Level:</label>
+                                    <span t-esc="state.lead.intended_level_label"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>Company Name:</label>
+                                    <span t-esc="state.lead.partner_name"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>Intended Car:</label>
+                                    <span t-esc="state.lead.intended_car"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>Contact Person:</label>
+                                    <span t-esc="state.lead.contact_name"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>Address:</label>
+                                    <span t-esc="state.lead.address"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>City / Region:</label>
+                                    <span t-esc="state.lead.city"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>Lead Source:</label>
+                                    <span t-esc="state.lead.source_lead_label"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>Expected Revenue:</label>
+                                    <span t-esc="state.lead.expected_revenue"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>Owner (Sales PIC):</label>
+                                    <span t-esc="state.lead.user_name"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>Department:</label>
+                                    <span t-esc="state.lead.department"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>Lead Status:</label>
+                                    <span class="geega_tender_badge badge-grey" t-esc="state.lead.stage_name"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>Stage:</label>
+                                    <span t-esc="state.lead.stage_name"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>Created Date:</label>
+                                    <span t-esc="state.lead.create_date_fmt"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>Created By:</label>
+                                    <span t-esc="state.lead.created_by"/>
+                                </div>
+                                <div class="geega_field">
+                                    <label>Follow-up Person:</label>
+                                    <span t-esc="state.lead.follow_up_person_name"/>
+                                </div>
+                                <div class="geega_field full-width">
+                                    <label>Remarks:</label>
+                                    <p t-esc="state.lead.description"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="geega_drawer_empty_tab">
+                            <p>Content for this tab is not implemented yet.</p>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>
