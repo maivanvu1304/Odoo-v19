@@ -2,6 +2,7 @@
 
 import { Component, useState, onWillStart } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
 import { TenderForm } from "./tender_form";
 import { TenderDrawer } from "./tender_drawer";
 
@@ -13,6 +14,7 @@ export class TenderPage extends Component {
         this.orm = useService("orm");
         this.actionService = useService("action");
         this.dialog = useService("dialog");
+        this.notification = useService("notification");
 
         this.state = useState({
             tenders: [],
@@ -20,6 +22,7 @@ export class TenderPage extends Component {
             selectAll: false,
             filterType: "all",
             searchKeyword: "",
+            canDelete: false,
             // Pagination
             currentPage: 1,
             itemsPerPage: 10,
@@ -28,8 +31,22 @@ export class TenderPage extends Component {
         });
 
         onWillStart(async () => {
+            await this.loadPermissions();
             await this.loadTenders();
         });
+    }
+
+    async loadPermissions() {
+        try {
+            this.state.canDelete = await this.orm.call(
+                "geega.tender",
+                "check_access_rights",
+                ["unlink", false]
+            );
+        } catch (e) {
+            console.warn("TenderPage: Could not load delete permission", e);
+            this.state.canDelete = false;
+        }
     }
 
     async loadTenders() {
@@ -155,12 +172,20 @@ export class TenderPage extends Component {
     }
 
     async onDeleteSelected() {
-        if (this.state.selectedIds.length === 0) return;
+        if (!this.state.canDelete || this.state.selectedIds.length === 0) return;
         if (confirm("Are you sure you want to delete selected items?")) {
-            await this.orm.unlink("geega.tender", this.state.selectedIds);
-            this.state.selectedIds = [];
-            this.state.selectAll = false;
-            await this.loadTenders();
+            try {
+                await this.orm.unlink("geega.tender", this.state.selectedIds);
+                this.state.selectedIds = [];
+                this.state.selectAll = false;
+                await this.loadTenders();
+                this.notification.add(_t("Selected tenders were deleted."), { type: "success" });
+            } catch (e) {
+                console.error("Error deleting selected tenders", e);
+                this.notification.add(_t("You don't have permission to delete these tenders."), {
+                    type: "danger",
+                });
+            }
         }
     }
 

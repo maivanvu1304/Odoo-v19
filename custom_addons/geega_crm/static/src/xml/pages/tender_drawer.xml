@@ -78,7 +78,7 @@
                         <button class="btn btn-outline-secondary" t-on-click="onUpdateStatus">
                             <i class="fa fa-sort-amount-asc"/> Update Status
                         </button>
-                        <button class="btn btn-outline-danger" t-on-click="onDelete">
+                        <button t-if="props.canDelete" class="btn btn-outline-danger" t-on-click="onDelete">
                             <i class="fa fa-trash-o"/> Delete
                         </button>
                     </div>

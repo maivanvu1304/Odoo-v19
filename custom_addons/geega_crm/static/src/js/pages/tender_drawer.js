@@ -9,6 +9,7 @@ export class TenderDrawer extends Component {
     static props = {
         tenderId: Number,
         onClose: Function,
+        canDelete: { type: Boolean, optional: true },
         onTenderUpdated: { type: Function, optional: true },
     };
 
@@ -98,6 +99,9 @@ export class TenderDrawer extends Component {
     }
 
     async onDelete() {
+        if (!this.props.canDelete) {
+            return;
+        }
         if (confirm(_t("Are you sure you want to delete this tender?"))) {
             try {
                 await this.orm.unlink("geega.tender", [this.props.tenderId]);

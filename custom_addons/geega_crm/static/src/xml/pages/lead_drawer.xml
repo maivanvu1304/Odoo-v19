@@ -34,7 +34,7 @@
                             <button class="geega_lead_action_btn" t-on-click="onConvert">
                                 <i class="fa fa-random"/> Convert
                             </button>
-                            <button class="geega_lead_action_btn danger" t-on-click="onDelete">
+                            <button t-if="props.canDelete" class="geega_lead_action_btn danger" t-on-click="onDelete">
                                 <i class="fa fa-trash-o"/> Delete
                             </button>
                         </div>

@@ -8,6 +8,7 @@ export class LeadDrawer extends Component {
     static props = {
         leadId: Number,
         onClose: Function,
+        canDelete: { type: Boolean, optional: true },
         onLeadUpdated: { type: Function, optional: true },
     };
 
@@ -161,6 +162,9 @@ export class LeadDrawer extends Component {
     }
 
     async onDelete() {
+        if (!this.props.canDelete) {
+            return;
+        }
         if (confirm("Are you sure you want to delete this lead?")) {
             try {
                 await this.orm.unlink("crm.lead", [this.props.leadId]);

@@ -53,7 +53,7 @@
             <!-- Action Toolbar -->
             <div class="geega_leads_toolbar">
                 <div class="geega_leads_toolbar_left">
-                    <button class="geega_leads_action_link delete" t-on-click="onDeleteSelected">
+                    <button t-if="state.canDelete" class="geega_leads_action_link delete" t-on-click="onDeleteSelected">
                         <i class="fa fa-trash"/> Delete
                     </button>
                 </div>
@@ -161,6 +161,7 @@
             <!-- Lead Drawer -->
             <LeadDrawer t-if="state.drawerOpen"
                 leadId="state.selectedLeadId"
+                canDelete="state.canDelete"
                 onClose.bind="onCloseDrawer"
                 onLeadUpdated.bind="onLeadUpdated"/>
 

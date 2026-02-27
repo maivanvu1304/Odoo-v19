@@ -2,6 +2,7 @@
 
 import { Component, useState, onWillStart } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
 import { LeadDrawer } from "./lead_drawer";
 
 export class OriginalLeadsPage extends Component {
@@ -12,6 +13,7 @@ export class OriginalLeadsPage extends Component {
     setup() {
         this.orm = useService("orm");
         this.actionService = useService("action");
+        this.notification = useService("notification");
 
         this.state = useState({
             leads: [],
@@ -19,6 +21,7 @@ export class OriginalLeadsPage extends Component {
             activeStageId: null,
             selectedIds: [],
             selectAll: false,
+            canDelete: false,
             // Drawer
             drawerOpen: false,
             selectedLeadId: null,
@@ -33,9 +36,23 @@ export class OriginalLeadsPage extends Component {
         });
 
         onWillStart(async () => {
+            await this.loadPermissions();
             await this.loadStages();
             await this.loadLeads();
         });
+    }
+
+    async loadPermissions() {
+        try {
+            this.state.canDelete = await this.orm.call(
+                "crm.lead",
+                "check_access_rights",
+                ["unlink", false]
+            );
+        } catch (e) {
+            console.warn("OriginalLeadsPage: Could not load delete permission", e);
+            this.state.canDelete = false;
+        }
     }
 
     // ─── Stage Tabs ───────────────────────────────────────
@@ -236,12 +253,20 @@ export class OriginalLeadsPage extends Component {
 
     // ─── Actions ──────────────────────────────────────────
     async onDeleteSelected() {
-        if (this.state.selectedIds.length === 0) return;
+        if (!this.state.canDelete || this.state.selectedIds.length === 0) return;
         if (confirm("Are you sure you want to delete selected leads?")) {
-            await this.orm.unlink("crm.lead", this.state.selectedIds);
-            this.state.selectedIds = [];
-            this.state.selectAll = false;
-            await this.loadLeads();
+            try {
+                await this.orm.unlink("crm.lead", this.state.selectedIds);
+                this.state.selectedIds = [];
+                this.state.selectAll = false;
+                await this.loadLeads();
+                this.notification.add(_t("Selected leads were deleted."), { type: "success" });
+            } catch (e) {
+                console.error("Error deleting selected leads", e);
+                this.notification.add(_t("You don't have permission to delete these leads."), {
+                    type: "danger",
+                });
+            }
         }
     }
 

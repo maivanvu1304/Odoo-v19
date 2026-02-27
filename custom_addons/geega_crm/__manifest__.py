@@ -30,8 +30,6 @@ Complete CRM solution with:
         'security/ir.model.access.csv',
         'data/crm_stage_data.xml',
         'data/ir_sequence_data.xml',
-        'data/demo_data.xml',
-        'views/crm_lead_views.xml',
         'views/sales_views.xml',
         'views/tender_views.xml',
         'views/lead_views.xml',

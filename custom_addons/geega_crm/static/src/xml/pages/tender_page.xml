@@ -47,7 +47,7 @@
                     <button class="geega_tender_action_link" t-on-click="onUpdateStage" t-att-disabled="state.selectedIds.length === 0">Update Stage</button>
                     <button class="geega_tender_action_link" t-on-click="onUpdateResult" t-att-disabled="state.selectedIds.length === 0">Update Result</button>
                     <button class="geega_tender_action_link" t-on-click="onExportSelected" t-att-disabled="state.selectedIds.length === 0">Export Selected</button>
-                    <button class="geega_tender_action_link delete" t-on-click="onDeleteSelected" t-att-disabled="state.selectedIds.length === 0">Delete</button>
+                    <button t-if="state.canDelete" class="geega_tender_action_link delete" t-on-click="onDeleteSelected" t-att-disabled="state.selectedIds.length === 0">Delete</button>
                 </div>
                 <div class="geega_tender_toolbar_right">
                     <button class="geega_tender_btn_new" t-on-click="onNewTender">
@@ -176,7 +176,11 @@
 
             <!-- Drawer -->
             <t t-if="state.selectedTenderId">
-                <TenderDrawer tenderId="state.selectedTenderId" onClose="() => this.onDrawerClose()"/>
+                <TenderDrawer
+                    tenderId="state.selectedTenderId"
+                    canDelete="state.canDelete"
+                    onClose="() => this.onDrawerClose()"
+                />
             </t>
 
         </div>
